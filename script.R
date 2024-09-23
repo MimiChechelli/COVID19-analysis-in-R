@@ -1,39 +1,32 @@
 rm(list=ls()) # é uma boa pratica remover todos os dados carregados
 library(Hmisc)
 
-data <- read.csv("C:/Users/Michelli/Documents/Programação/Projetos/Pessoal/Covid-19 dataset analysis/COVID19_line_list_data.csv")
-describe(data) # resumo sobre o dataframa
+# troque a URL pela localização do csv no seu computador
+dados <- read.csv("C:/Users/Michelli/Documents/Programação/Projetos/Pessoal/Covid-19 dadosset analysis/COVID19_line_list_dados.csv")
+describe(dados) # resumo sobre o dataframe
 
-  # cleaned up death column
-data$death_dummy <- as.integer(data$death != 0)
-unique(data$death_dummy)
-# death rate
-sum(data$death_dummy) / nrow(data)
+# tratando os dados errados da coluna death_dummy que indica se a pessoa morreu != 0, ou não = 0
+dados$death_dummy <- as.integer(dados$death != 0)
+unique(dados$death_dummy)
+# média de pessoas no df que morreram = 5,8%
+sum(dados$death_dummy) / nrow(dados)
 
-# Sera que pessoas mais velhas realmente morrem mais do que pessoas mais novas como dito nas midias?
-dead = subset(data, death_dummy == 1)
-alive = subset(data, death_dummy == 0)
+# Como a idade afeta a probabilidade de uma pessoa morrer de covid
+alive = subset(dados, death_dummy == 0)
 mean(dead$age, na.rm = TRUE)
 mean(alive$age, na.rm = TRUE)
-# is this statistically significant?
 t.test(alive$age, dead$age, alternative="two.sided", conf.level = 0.99)
-# normally, if p-value < 0.05, we reject null hypothesis
-# here, p-value ~ 0, so we reject the null hypothesis and 
-# conclude that this is statistically significant
+# com um p-value < 0.05, nos rejeitamos a hipotese nula
+# e concluimos que a idade é um valor significativo
 
-# GENDER
-# claim: gender has no effect
-men = subset(data, gender == "male")
-women = subset(data, gender == "female")
+# Como o genero afeta a probabilidade da algem morrer de covid
+men = subset(dados, gender == "male")
+women = subset(dados, gender == "female")
 mean(men$death_dummy, na.rm = TRUE) #8.5%!
 mean(women$death_dummy, na.rm = TRUE) #3.7%
-# is this statistically significant?
+# mas sera que esses são estatisticamente relevantes?
 t.test(men$death_dummy, women$death_dummy, alternative="two.sided", conf.level = 0.99)
-# 99% confidence: men have from 0.8% to 8.8% higher chance
-# of dying.
-# p-value = 0.002 < 0.05, so this is statistically
-# significant
-
+# podemos afirmar com 99% de precisão que homens tem de 0,8% a 8,8% a mais de chance de morrer 
 
 
 
