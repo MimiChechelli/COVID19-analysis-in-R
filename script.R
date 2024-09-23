@@ -1,16 +1,16 @@
-rm(list=ls()) # removes all variables stored previously
-library(Hmisc) # import
+rm(list=ls()) # é uma boa pratica remover todos os dados carregados
+library(Hmisc)
 
-data <- read.csv("C:/Users/mykyt/Desktop/covid_R/COVID19_line_list_data.csv")
-describe(data) # Hmisc command
+data <- read.csv("C:/Users/Michelli/Documents/Programação/Projetos/Pessoal/Covid-19 dataset analysis/COVID19_line_list_data.csv")
+describe(data) # resumo sobre o dataframa
 
-# cleaned up death column
+  # cleaned up death column
 data$death_dummy <- as.integer(data$death != 0)
+unique(data$death_dummy)
 # death rate
 sum(data$death_dummy) / nrow(data)
 
-# AGE
-# claim: people who die are older
+# Sera que pessoas mais velhas realmente morrem mais do que pessoas mais novas como dito nas midias?
 dead = subset(data, death_dummy == 1)
 alive = subset(data, death_dummy == 0)
 mean(dead$age, na.rm = TRUE)
